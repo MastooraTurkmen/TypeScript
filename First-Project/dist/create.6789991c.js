@@ -584,6 +584,98 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 }
 
 },{}],"4WE0n":[function(require,module,exports) {
+var _pizza = require("./models/Pizza");
+// const titleInput = document.querySelector(
+//   'input[name="title"]'
+// ) as HTMLInputElement;
+// const descriptionInput = document.querySelector(
+//   "textarea"
+// ) as HTMLTextAreaElement;
+const form = document.querySelector(".create");
+form.addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    const data = new FormData(form);
+    const newPizza = {
+        title: data.get("title"),
+        description: data.get("description"),
+        toppings: data.getAll("toppings"),
+        price: parseInt(data.get("price"))
+    };
+    const res = await (0, _pizza.Pizza).save(newPizza);
+    if (!res.ok) console.log("not able to save the pizza");
+    if (res.ok) window.location.href = "/";
+});
+
+},{"./models/Pizza":"85kvU"}],"85kvU":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Pizza", ()=>Pizza);
+var _dataResource = require("../services/DataResource");
+const Pizza = new (0, _dataResource.DataResource)("http://localhost:3000/pizzas");
+
+},{"../services/DataResource":"7WAiV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7WAiV":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "DataResource", ()=>DataResource);
+class DataResource {
+    constructor(endpoint){
+        this.endpoint = endpoint;
+    }
+    async loadAll() {
+        const res = await fetch(this.endpoint);
+        return res.json();
+    }
+    async loadOne(id) {
+        const res = await fetch(`${this.endpoint}/${id}`);
+        return res.json();
+    }
+    async delete(id) {
+        const res = await fetch(`${this.endpoint}/${id}`, {
+            method: "DELETE"
+        });
+        return res;
+    }
+    async save(data) {
+        const res = await fetch(this.endpoint, {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        return res;
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || Object.prototype.hasOwnProperty.call(dest, key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
 
 },{}]},["wXxF1","4WE0n"], "4WE0n", "parcelRequire3899")
 
